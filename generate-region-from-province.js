@@ -50,7 +50,7 @@ const regionInfo = {
   中南: ["河南", "湖北", "湖南", "广东", "广西", "海南"],
   西北: ["宁夏", "新疆", "青海", "陕西", "甘肃"],
   西南: ["四川", "云南", "贵州", "西藏", "重庆"],
-  台港澳: ["台湾", "香港", "澳门"]
+  港澳台: ["台湾", "香港", "澳门"]
 };
 
 const region = {
@@ -61,7 +61,7 @@ const region = {
   centralsouth: "中南",
   northwest: "西北",
   sourthwest: "西南",
-  tga: "台港澳"
+  hmt: "港澳台"
 };
 
 const regionReverse = Object.entries(region).reduce((obj, d) => {
