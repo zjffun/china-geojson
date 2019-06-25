@@ -1,16 +1,14 @@
 const fs = require("fs");
-
-// 省数据
+// 省映射表
 const { provinceMap, provinceAbbrMap } = require("./province-map.js");
-
 // 全国 geoJSON
 const chinaMap = require("./china.json");
 
+// 区域最小单位
 const unit = process.argv[2] === "city" ? "city" : "province";
-
+// 文件夹
 const regionDir = `${__dirname}/geometryRegion`;
 const provinceDir = `${__dirname}/geometryProvince`;
-
 // 区域信息
 const regionInfo = {
   // 全国: [
@@ -57,7 +55,7 @@ const regionInfo = {
   西南: ["四川", "云南", "贵州", "西藏", "重庆"],
   港澳台: ["台湾", "香港", "澳门"]
 };
-
+// 区域映射表
 const region = {
   // china: "全国",
   north: "华北",
@@ -68,7 +66,6 @@ const region = {
   sourthwest: "西南",
   hmt: "港澳台"
 };
-
 const regionReverse = Object.entries(region).reduce((obj, d) => {
   obj[d[1]] = d[0];
   return obj;
@@ -88,8 +85,6 @@ for (const key in regionInfo) {
     };
     let features = [];
 
-    // 遍历区域的省
-
     elements.forEach(element => {
       let provinceFeatures = null;
       if (unit === "province") {
@@ -103,7 +98,6 @@ for (const key in regionInfo) {
       }
       features = features.concat(provinceFeatures);
     });
-
     data.features = features;
 
     // 写入
