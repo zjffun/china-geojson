@@ -1,7 +1,12 @@
 const fs = require("fs");
 
 // 省数据
-const { provinceMap } = require("./province-map.js");
+const { provinceMap, provinceAbbrMap } = require("./province-map.js");
+
+// 全国 geoJSON
+const chinaMap = require("./china.json");
+
+const unit = process.argv[2] === "city" ? "city" : "province";
 
 const regionDir = `${__dirname}/geometryRegion`;
 const provinceDir = `${__dirname}/geometryProvince`;
@@ -69,10 +74,11 @@ const regionReverse = Object.entries(region).reduce((obj, d) => {
   return obj;
 }, {});
 
+// 创建文件夹
+(fs.existsSync(regionDir) && fs.lstatSync(regionDir).isDirectory()) ||
+  fs.mkdirSync(regionDir);
+
 // 通过省 json 数据构造区域数据
-
-(fs.existsSync(regionDir) && fs.lstatSync(regionDir).isDirectory()) || fs.mkdirSync(regionDir);
-
 for (const key in regionInfo) {
   if (regionInfo.hasOwnProperty(key)) {
     const elements = regionInfo[key];
@@ -83,11 +89,21 @@ for (const key in regionInfo) {
     let features = [];
 
     // 遍历区域的省
-    elements.forEach(d => {
-      let provinceFeatures = require(`${provinceDir}/${provinceMap[d]}.json`)
-        .features;
+
+    elements.forEach(element => {
+      let provinceFeatures = null;
+      if (unit === "province") {
+        provinceFeatures = chinaMap.features.filter(
+          feature => feature.properties.name === provinceAbbrMap[element]
+        );
+      } else {
+        provinceFeatures = require(`${provinceDir}/${
+          provinceMap[element]
+        }.json`).features;
+      }
       features = features.concat(provinceFeatures);
     });
+
     data.features = features;
 
     // 写入
